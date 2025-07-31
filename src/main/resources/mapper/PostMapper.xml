@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.farm404.samyang3.mapper.PostMapper">
+    
+    <!-- 전체 게시글 목록 -->
+    <select id="selectAllPosts" resultType="com.farm404.samyang3.domain.PostVO">
+        SELECT * FROM Post 
+        ORDER BY PostID DESC
+    </select>
+    
+    <!-- 카테고리별 게시글 목록 -->
+    <select id="selectByCategory" resultType="com.farm404.samyang3.domain.PostVO">
+        SELECT * FROM Post 
+        WHERE Category = #{category}
+        ORDER BY PostID DESC
+    </select>
+    
+    <!-- 사용자별 게시글 목록 -->
+    <select id="selectByUserId" resultType="com.farm404.samyang3.domain.PostVO">
+        SELECT * FROM Post 
+        WHERE UserID = #{userId}
+        ORDER BY PostID DESC
+    </select>
+    
+    <!-- 게시글 검색 -->
+    <select id="searchPosts" resultType="com.farm404.samyang3.domain.PostVO">
+        SELECT * FROM Post 
+        WHERE Title LIKE CONCAT('%', #{keyword}, '%') 
+           OR Content LIKE CONCAT('%', #{keyword}, '%')
+           OR AuthorName LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY PostID DESC
+    </select>
+    
+    <!-- 게시글 상세 조회 -->
+    <select id="selectById" resultType="com.farm404.samyang3.domain.PostVO">
+        SELECT * FROM Post 
+        WHERE PostID = #{postId}
+    </select>
+    
+    <!-- 게시글 작성 -->
+    <insert id="insertPost" parameterType="com.farm404.samyang3.domain.PostVO" useGeneratedKeys="true" keyProperty="postID">
+        INSERT INTO Post (UserID, Title, Content, AuthorName, Category)
+        VALUES (#{userID}, #{title}, #{content}, #{authorName}, #{category})
+    </insert>
+    
+    <!-- 게시글 수정 -->
+    <update id="updatePost" parameterType="com.farm404.samyang3.domain.PostVO">
+        UPDATE Post 
+        SET Title = #{title}, 
+            Content = #{content},
+            Category = #{category}
+        WHERE PostID = #{postID}
+    </update>
+    
+    <!-- 게시글 삭제 -->
+    <delete id="deletePost">
+        DELETE FROM Post 
+        WHERE PostID = #{postId}
+    </delete>
+    
+    <!-- 조회수 증가 -->
+    <update id="increaseViewCount">
+        UPDATE Post 
+        SET ViewCount = ViewCount + 1
+        WHERE PostID = #{postId}
+    </update>
+    
+</mapper>
