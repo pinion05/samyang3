@@ -89,13 +89,14 @@
             </div>
         </div>
         
-        <c:if test="${order.orderStatus eq '주문완료'}">
-            <div class="order-actions">
-                <form action="${pageContext.request.contextPath}/order/cancel/${order.orderID}" method="post">
+        <div class="order-actions">
+            <c:if test="${order.orderStatus eq '주문완료'}">
+                <a href="${pageContext.request.contextPath}/review/write/${order.orderID}" class="btn btn-primary">리뷰 작성</a>
+                <form action="${pageContext.request.contextPath}/order/cancel/${order.orderID}" method="post" style="display: inline;">
                     <button type="submit" class="btn btn-danger" onclick="return confirm('정말 주문을 취소하시겠습니까?');">주문 취소</button>
                 </form>
-            </div>
-        </c:if>
+            </c:if>
+        </div>
     </div>
 </div>
 
