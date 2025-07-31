@@ -3,7 +3,7 @@
 <mapper namespace="com.farm404.samyang3.mapper.CartMapper">
 
     <select id="selectByUserId" parameterType="Integer" resultType="CartVO">
-        SELECT c.*, p.ProductName, p.Price, p.ImageUrl
+        SELECT c.*, p.ProductName, p.Price, p.ImageURL
         FROM Cart c, Product p
         WHERE c.ProductID = p.ProductID AND c.UserID = #{userID}
         ORDER BY c.CartID DESC
@@ -35,6 +35,12 @@
     
     <select id="countByUserId" parameterType="Integer" resultType="int">
         SELECT COUNT(*) FROM Cart WHERE UserID = #{userID}
+    </select>
+    
+    <select id="selectById" parameterType="Integer" resultType="CartVO">
+        SELECT c.*, p.ProductName, p.Price, p.ImageURL
+        FROM Cart c, Product p
+        WHERE c.ProductID = p.ProductID AND c.CartID = #{cartID}
     </select>
 
 </mapper>

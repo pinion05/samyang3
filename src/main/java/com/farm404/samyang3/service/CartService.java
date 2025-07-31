@@ -15,7 +15,7 @@ public class CartService {
     private CartMapper cartMapper;
     
     // 사용자의 장바구니 목록
-    public List<CartVO> getCartList(Integer userID) {
+    public List<CartVO> getCartItems(Integer userID) {
         return cartMapper.selectByUserId(userID);
     }
     
@@ -43,7 +43,7 @@ public class CartService {
     }
     
     // 장바구니에서 삭제
-    public boolean removeFromCart(Integer cartID) {
+    public boolean deleteFromCart(Integer cartID) {
         return cartMapper.deleteCart(cartID) > 0;
     }
     
@@ -57,15 +57,24 @@ public class CartService {
         return cartMapper.countByUserId(userID);
     }
     
-    // 장바구니 총 금액 계산
-    public int calculateTotalAmount(Integer userID) {
-        List<CartVO> cartList = cartMapper.selectByUserId(userID);
+    // 장바구니 총 금액 계산 (CartVO 리스트 기반)
+    public int calculateTotalAmount(List<CartVO> cartItems) {
         int total = 0;
         
-        for (CartVO cart : cartList) {
+        for (CartVO cart : cartItems) {
             total += cart.getPrice() * cart.getQuantity();
         }
         
         return total;
+    }
+    
+    // 장바구니 단건 조회
+    public CartVO getCartById(Long cartId) {
+        return cartMapper.selectById(cartId.intValue());
+    }
+    
+    // 장바구니 수정
+    public boolean updateCart(CartVO cart) {
+        return cartMapper.updateQuantity(cart.getCartID(), cart.getQuantity()) > 0;
     }
 }

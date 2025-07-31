@@ -27,4 +27,7 @@ public interface CartMapper {
     
     // 장바구니 상품 개수
     int countByUserId(Integer userID);
+    
+    // 장바구니 단건 조회
+    CartVO selectById(Integer cartID);
 }
