@@ -33,5 +33,20 @@
         SET Password = #{password}
         WHERE UserID = #{userID}
     </update>
+    
+    <select id="selectAllUsers" resultType="UserVO">
+        SELECT * FROM User 
+        ORDER BY UserID DESC
+    </select>
+    
+    <select id="countUsers" resultType="int">
+        SELECT COUNT(*) FROM User
+    </select>
+    
+    <update id="updateAdminStatus">
+        UPDATE User 
+        SET IsAdmin = #{isAdmin}
+        WHERE UserID = #{userID}
+    </update>
 
 </mapper>

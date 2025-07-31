@@ -5,6 +5,7 @@ import com.farm404.samyang3.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -67,5 +68,24 @@ public class UserService {
     // 이메일 중복 체크
     public boolean checkEmail(String email) {
         return userMapper.selectByEmail(email) == null;
+    }
+    
+    // 전체 사용자 목록
+    public List<UserVO> getAllUsers() {
+        return userMapper.selectAllUsers();
+    }
+    
+    // 사용자 수
+    public int getUserCount() {
+        return userMapper.countUsers();
+    }
+    
+    // 관리자 권한 토글
+    public boolean toggleAdminStatus(Integer userId) {
+        UserVO user = userMapper.selectById(userId);
+        if (user != null) {
+            return userMapper.updateAdminStatus(userId, !user.getIsAdmin()) > 0;
+        }
+        return false;
     }
 }

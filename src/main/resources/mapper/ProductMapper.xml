@@ -51,5 +51,15 @@
            OR Category LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY ProductID DESC
     </select>
+    
+    <select id="countProducts" resultType="int">
+        SELECT COUNT(*) FROM Product
+    </select>
+    
+    <select id="selectTopProducts" parameterType="int" resultType="ProductVO">
+        SELECT * FROM Product 
+        ORDER BY ProductID DESC
+        LIMIT #{limit}
+    </select>
 
 </mapper>

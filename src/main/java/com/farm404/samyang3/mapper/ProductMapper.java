@@ -33,4 +33,10 @@ public interface ProductMapper {
     
     // 상품 검색
     List<ProductVO> searchProducts(String keyword);
+    
+    // 상품 개수
+    int countProducts();
+    
+    // 상위 상품 목록
+    List<ProductVO> selectTopProducts(int limit);
 }

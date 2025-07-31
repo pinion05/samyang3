@@ -75,6 +75,7 @@ public class ReviewController {
     public String write(@RequestParam Long orderId,
                        @RequestParam Long productId,
                        @RequestParam Integer rating,
+                       @RequestParam String title,
                        @RequestParam String comment,
                        HttpSession session,
                        RedirectAttributes redirectAttributes) {
@@ -88,10 +89,11 @@ public class ReviewController {
         ReviewVO review = new ReviewVO();
         review.setUserID(loginUser.getUserID());
         review.setProductID(productId.intValue());
-        review.setOrderID(orderId.intValue());
+        // review doesn't have orderID in the VO
         review.setUsername(loginUser.getUsername());
         review.setRating(rating);
-        review.setComment(comment);
+        review.setTitle(title);
+        review.setContent(comment);
         
         if (reviewService.addReview(review)) {
             redirectAttributes.addFlashAttribute("success", "리뷰가 등록되었습니다.");
@@ -147,7 +149,7 @@ public class ReviewController {
         }
         
         review.setRating(rating);
-        review.setComment(comment);
+        review.setContent(comment);
         
         if (reviewService.updateReview(review)) {
             redirectAttributes.addFlashAttribute("success", "리뷰가 수정되었습니다.");

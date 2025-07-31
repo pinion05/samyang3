@@ -24,4 +24,16 @@ public interface OrderMapper {
     
     // 사용자의 최근 주문 1개
     OrderVO selectLatestByUserId(Integer userID);
+    
+    // 주문 개수
+    int countOrders();
+    
+    // 대기중인 주문 개수
+    int countPendingOrders();
+    
+    // 최근 주문 목록
+    List<OrderVO> selectRecentOrders(int limit);
+    
+    // 상태별 주문 목록
+    List<OrderVO> selectByStatus(String status);
 }

@@ -35,5 +35,26 @@
         ORDER BY OrderID DESC
         LIMIT 1
     </select>
+    
+    <select id="countOrders" resultType="int">
+        SELECT COUNT(*) FROM Orders
+    </select>
+    
+    <select id="countPendingOrders" resultType="int">
+        SELECT COUNT(*) FROM Orders
+        WHERE OrderStatus = '주문접수'
+    </select>
+    
+    <select id="selectRecentOrders" parameterType="int" resultType="OrderVO">
+        SELECT * FROM Orders
+        ORDER BY OrderDate DESC
+        LIMIT #{limit}
+    </select>
+    
+    <select id="selectByStatus" parameterType="String" resultType="OrderVO">
+        SELECT * FROM Orders
+        WHERE OrderStatus = #{status}
+        ORDER BY OrderID DESC
+    </select>
 
 </mapper>

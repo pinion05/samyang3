@@ -3,6 +3,7 @@ package com.farm404.samyang3.mapper;
 import com.farm404.samyang3.domain.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -23,4 +24,13 @@ public interface UserMapper {
     
     // 비밀번호 변경
     int updatePassword(@Param("userID") Integer userID, @Param("password") String password);
+    
+    // 전체 사용자 목록
+    List<UserVO> selectAllUsers();
+    
+    // 사용자 수
+    int countUsers();
+    
+    // 관리자 권한 업데이트
+    int updateAdminStatus(@Param("userID") Integer userID, @Param("isAdmin") Boolean isAdmin);
 }

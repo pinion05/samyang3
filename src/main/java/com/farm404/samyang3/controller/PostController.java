@@ -95,7 +95,7 @@ public class PostController {
         }
         
         post.setUserID(loginUser.getUserID());
-        post.setAuthorName(loginUser.getFullName());
+        post.setUsername(loginUser.getUsername());
         
         if (postService.createPost(post)) {
             redirectAttributes.addFlashAttribute("success", "게시글이 등록되었습니다.");
@@ -220,7 +220,7 @@ public class PostController {
         CommentVO comment = new CommentVO();
         comment.setPostID(postId.intValue());
         comment.setUserID(loginUser.getUserID());
-        comment.setAuthorName(loginUser.getFullName());
+        comment.setUsername(loginUser.getUsername());
         comment.setContent(content);
         
         if (commentService.addComment(comment)) {

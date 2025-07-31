@@ -5,6 +5,7 @@ import com.farm404.samyang3.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -63,5 +64,22 @@ public class ProductService {
     // 상품 삭제 (관리자)
     public boolean deleteProduct(Long productID) {
         return productMapper.deleteProduct(productID.intValue()) > 0;
+    }
+    
+    // 상품 개수
+    public int getProductCount() {
+        return productMapper.countProducts();
+    }
+    
+    // 베스트 셀러 상품
+    public List<ProductVO> getTopSellingProducts(int limit) {
+        // 추후 판매량 기준으로 구현, 현재는 임시로 최신 상품 반환
+        return productMapper.selectTopProducts(limit);
+    }
+    
+    // 카테고리별 통계
+    public List<Object> getCategoryStatistics() {
+        // 추후 구현
+        return new ArrayList<>();
     }
 }

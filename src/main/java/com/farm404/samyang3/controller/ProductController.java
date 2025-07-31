@@ -115,7 +115,7 @@ public class ProductController {
             File saveFile = new File(uploadDir + savedFilename);
             imageFile.transferTo(saveFile);
             
-            product.setImageURL("/images/products/" + savedFilename);
+            product.setImageUrl("/images/products/" + savedFilename);
         }
         
         if (productService.addProduct(product)) {
@@ -159,7 +159,7 @@ public class ProductController {
             return "redirect:/";
         }
         
-        product.setProductID(id);
+        product.setProductID(id.intValue());
         
         // 기존 상품 정보 조회
         ProductVO existingProduct = productService.getProductById(id);
@@ -179,10 +179,10 @@ public class ProductController {
             File saveFile = new File(uploadDir + savedFilename);
             imageFile.transferTo(saveFile);
             
-            product.setImageURL("/images/products/" + savedFilename);
+            product.setImageUrl("/images/products/" + savedFilename);
         } else {
             // 이미지를 변경하지 않은 경우 기존 이미지 URL 유지
-            product.setImageURL(existingProduct.getImageURL());
+            product.setImageUrl(existingProduct.getImageUrl());
         }
         
         if (productService.updateProduct(product)) {

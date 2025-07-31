@@ -106,4 +106,29 @@ public class OrderService {
     public boolean cancelOrder(Long orderID) {
         return orderMapper.updateStatus(orderID.intValue(), "주문취소") > 0;
     }
+    
+    // 주문 개수
+    public int getOrderCount() {
+        return orderMapper.countOrders();
+    }
+    
+    // 대기중인 주문 개수
+    public int getPendingOrderCount() {
+        return orderMapper.countPendingOrders();
+    }
+    
+    // 최근 주문 목록
+    public List<OrderVO> getRecentOrders(int limit) {
+        return orderMapper.selectRecentOrders(limit);
+    }
+    
+    // 상태별 주문 목록
+    public List<OrderVO> getOrdersByStatus(String status) {
+        return orderMapper.selectByStatus(status);
+    }
+    
+    // 월별 통계 (추후 구현)
+    public List<Object> getMonthlyStatistics() {
+        return new ArrayList<>();
+    }
 }
