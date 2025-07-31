@@ -17,84 +17,87 @@
     
     <c:choose>
         <c:when test="${not empty cartItems}">
-            <form id="cartForm" method="post">
-                <div class="cart-header">
-                    <label>
-                        <input type="checkbox" id="selectAll"> 전체선택
-                    </label>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="deleteSelected()">선택삭제</button>
-                </div>
-                
-                <div class="cart-items">
-                    <c:forEach items="${cartItems}" var="item">
-                        <div class="cart-item">
-                            <div class="item-select">
-                                <input type="checkbox" name="cartIds" value="${item.cartID}" class="item-checkbox">
-                            </div>
-                            
-                            <div class="item-image">
-                                <a href="${pageContext.request.contextPath}/product/${item.productID}">
-                                    <c:choose>
-                                        <c:when test="${not empty item.imageUrl}">
-                                            <img src="${pageContext.request.contextPath}${item.imageUrl}" alt="${item.productName}">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <img src="${pageContext.request.contextPath}/images/no-image.png" alt="이미지 없음">
-                                        </c:otherwise>
-                                    </c:choose>
-                                </a>
-                            </div>
-                            
-                            <div class="item-info">
-                                <h3><a href="${pageContext.request.contextPath}/product/${item.productID}">${item.productName}</a></h3>
-                                <p class="price"><fmt:formatNumber value="${item.price}" pattern="#,###"/>원</p>
-                            </div>
-                            
-                            <div class="item-quantity">
-                                <form action="${pageContext.request.contextPath}/cart/update" method="post" class="quantity-form">
-                                    <input type="hidden" name="cartId" value="${item.cartID}">
-                                    <input type="number" name="quantity" value="${item.quantity}" min="1" max="99" class="quantity-input">
-                                    <button type="submit" class="btn btn-sm">변경</button>
-                                </form>
-                            </div>
-                            
-                            <div class="item-total">
-                                <p class="total-price">
-                                    <fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###"/>원
-                                </p>
-                            </div>
-                            
-                            <div class="item-delete">
-                                <form action="${pageContext.request.contextPath}/cart/delete" method="post">
-                                    <input type="hidden" name="cartId" value="${item.cartID}">
-                                    <button type="submit" class="btn-delete">×</button>
-                                </form>
-                            </div>
+            <div class="cart-header">
+                <label>
+                    <input type="checkbox" id="selectAll"> 전체선택
+                </label>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="deleteSelected()">선택삭제</button>
+            </div>
+            
+            <div class="cart-items">
+                <c:forEach items="${cartItems}" var="item">
+                    <div class="cart-item">
+                        <div class="item-select">
+                            <input type="checkbox" name="cartIds" value="${item.cartID}" class="item-checkbox">
                         </div>
-                    </c:forEach>
-                </div>
-                
-                <div class="cart-summary">
-                    <div class="summary-content">
-                        <h3>주문 요약</h3>
-                        <div class="summary-row">
-                            <span>상품 합계</span>
-                            <span><fmt:formatNumber value="${totalAmount}" pattern="#,###"/>원</span>
+                        
+                        <div class="item-image">
+                            <a href="${pageContext.request.contextPath}/product/${item.productID}">
+                                <c:choose>
+                                    <c:when test="${not empty item.imageUrl}">
+                                        <img src="${pageContext.request.contextPath}${item.imageUrl}" alt="${item.productName}">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${pageContext.request.contextPath}/images/no-image.png" alt="이미지 없음">
+                                    </c:otherwise>
+                                </c:choose>
+                            </a>
                         </div>
-                        <div class="summary-row">
-                            <span>배송비</span>
-                            <span>${totalAmount >= 30000 ? '무료' : '3,000원'}</span>
+                        
+                        <div class="item-info">
+                            <h3><a href="${pageContext.request.contextPath}/product/${item.productID}">${item.productName}</a></h3>
+                            <p class="price"><fmt:formatNumber value="${item.price}" pattern="#,###"/>원</p>
                         </div>
-                        <div class="summary-divider"></div>
-                        <div class="summary-row total">
-                            <span>총 결제금액</span>
-                            <span class="total-amount">
-                                <fmt:formatNumber value="${totalAmount >= 30000 ? totalAmount : totalAmount + 3000}" pattern="#,###"/>원
-                            </span>
+                        
+                        <div class="item-quantity">
+                            <form action="${pageContext.request.contextPath}/cart/update" method="post" class="quantity-form">
+                                <input type="hidden" name="cartId" value="${item.cartID}">
+                                <input type="number" name="quantity" value="${item.quantity}" min="1" max="99" class="quantity-input">
+                                <button type="submit" class="btn btn-sm">변경</button>
+                            </form>
                         </div>
-                        <button type="button" class="btn btn-primary btn-block" onclick="checkout()">주문하기</button>
+                        
+                        <div class="item-total">
+                            <p class="total-price">
+                                <fmt:formatNumber value="${item.price * item.quantity}" pattern="#,###"/>원
+                            </p>
+                        </div>
+                        
+                        <div class="item-delete">
+                            <form action="${pageContext.request.contextPath}/cart/delete" method="post">
+                                <input type="hidden" name="cartId" value="${item.cartID}">
+                                <button type="submit" class="btn-delete">×</button>
+                            </form>
+                        </div>
                     </div>
+                </c:forEach>
+            </div>
+            
+            <div class="cart-summary">
+                <div class="summary-content">
+                    <h3>주문 요약</h3>
+                    <div class="summary-row">
+                        <span>상품 합계</span>
+                        <span><fmt:formatNumber value="${totalAmount}" pattern="#,###"/>원</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>배송비</span>
+                        <span>${totalAmount >= 30000 ? '무료' : '3,000원'}</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row total">
+                        <span>총 결제금액</span>
+                        <span class="total-amount">
+                            <fmt:formatNumber value="${totalAmount >= 30000 ? totalAmount : totalAmount + 3000}" pattern="#,###"/>원
+                        </span>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-block" onclick="checkout()">주문하기</button>
                 </div>
+            </div>
+            
+            <!-- 선택 삭제를 위한 숨겨진 폼 -->
+            <form id="cartForm" action="${pageContext.request.contextPath}/cart/delete-selected" method="post" style="display: none;">
+                <!-- JavaScript로 선택된 cartIds가 여기에 추가됨 -->
             </form>
         </c:when>
         <c:otherwise>
@@ -312,8 +315,19 @@ function deleteSelected() {
     }
     
     if (confirm(checkedItems.length + '개 상품을 삭제하시겠습니까?')) {
-        document.getElementById('cartForm').action = '${pageContext.request.contextPath}/cart/delete-selected';
-        document.getElementById('cartForm').submit();
+        const form = document.getElementById('cartForm');
+        form.innerHTML = ''; // 기존 내용 제거
+        
+        // 선택된 체크박스의 값을 폼에 추가
+        checkedItems.forEach(checkbox => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'cartIds';
+            input.value = checkbox.value;
+            form.appendChild(input);
+        });
+        
+        form.submit();
     }
 }
 
