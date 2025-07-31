@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.farm404.samyang3.mapper.CartMapper">
+
+    <select id="selectByUserId" parameterType="Integer" resultType="CartVO">
+        SELECT c.*, p.ProductName, p.Price, p.ImageUrl
+        FROM Cart c, Product p
+        WHERE c.ProductID = p.ProductID AND c.UserID = #{userID}
+        ORDER BY c.CartID DESC
+    </select>
+    
+    <insert id="insertCart" parameterType="CartVO" useGeneratedKeys="true" keyProperty="cartID">
+        INSERT INTO Cart (UserID, ProductID, Quantity)
+        VALUES (#{userID}, #{productID}, #{quantity})
+    </insert>
+    
+    <update id="updateQuantity">
+        UPDATE Cart 
+        SET Quantity = #{quantity}
+        WHERE CartID = #{cartID}
+    </update>
+    
+    <delete id="deleteCart" parameterType="Integer">
+        DELETE FROM Cart WHERE CartID = #{cartID}
+    </delete>
+    
+    <delete id="deleteAllByUserId" parameterType="Integer">
+        DELETE FROM Cart WHERE UserID = #{userID}
+    </delete>
+    
+    <select id="selectByUserIdAndProductId" resultType="CartVO">
+        SELECT * FROM Cart 
+        WHERE UserID = #{userID} AND ProductID = #{productID}
+    </select>
+    
+    <select id="countByUserId" parameterType="Integer" resultType="int">
+        SELECT COUNT(*) FROM Cart WHERE UserID = #{userID}
+    </select>
+
+</mapper>

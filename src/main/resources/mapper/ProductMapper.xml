@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.farm404.samyang3.mapper.ProductMapper">
+
+    <select id="selectAllProducts" resultType="ProductVO">
+        SELECT * FROM Product ORDER BY ProductID DESC
+    </select>
+    
+    <select id="selectByCategory" parameterType="String" resultType="ProductVO">
+        SELECT * FROM Product WHERE Category = #{category} ORDER BY ProductID DESC
+    </select>
+    
+    <select id="selectById" parameterType="Integer" resultType="ProductVO">
+        SELECT * FROM Product WHERE ProductID = #{productID}
+    </select>
+    
+    <insert id="insertProduct" parameterType="ProductVO" useGeneratedKeys="true" keyProperty="productID">
+        INSERT INTO Product (ProductName, Category, Description, Price, Stock, ImageUrl)
+        VALUES (#{productName}, #{category}, #{description}, #{price}, #{stock}, #{imageUrl})
+    </insert>
+    
+    <update id="updateProduct" parameterType="ProductVO">
+        UPDATE Product 
+        SET ProductName = #{productName},
+            Category = #{category},
+            Description = #{description},
+            Price = #{price},
+            Stock = #{stock},
+            ImageUrl = #{imageUrl}
+        WHERE ProductID = #{productID}
+    </update>
+    
+    <delete id="deleteProduct" parameterType="Integer">
+        DELETE FROM Product WHERE ProductID = #{productID}
+    </delete>
+    
+    <update id="updateStock">
+        UPDATE Product 
+        SET Stock = Stock - #{quantity}
+        WHERE ProductID = #{productID} AND Stock >= #{quantity}
+    </update>
+    
+    <select id="selectCategories" resultType="String">
+        SELECT DISTINCT Category FROM Product WHERE Category IS NOT NULL ORDER BY Category
+    </select>
+
+</mapper>
