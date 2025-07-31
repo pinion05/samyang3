@@ -55,7 +55,7 @@ Samyang3는 농산물(씨앗, 모종 등)을 판매하는 간단한 이커머스
 
 ### 아키텍처 다이어그램
 
-```markdown
+
 ```mermaid
 erDiagram
     User {
@@ -151,7 +151,7 @@ erDiagram
     Product ||--o{ Review : "reviewed"
     Orders ||--o{ OrderItem : "contains"
     Post ||--o{ Comment : "has"
-
+```
 
 
 
