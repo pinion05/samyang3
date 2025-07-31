@@ -3,8 +3,8 @@
 <mapper namespace="com.farm404.samyang3.mapper.OrderMapper">
 
     <insert id="insertOrder" parameterType="OrderVO" useGeneratedKeys="true" keyProperty="orderID">
-        INSERT INTO Orders (UserID, TotalAmount, Status, ShippingName, ShippingPhone, ShippingAddress)
-        VALUES (#{userID}, #{totalAmount}, #{status}, #{shippingName}, #{shippingPhone}, #{shippingAddress})
+        INSERT INTO Orders (UserID, UserName, TotalAmount, OrderStatus, ShippingAddress, PaymentMethod)
+        VALUES (#{userID}, #{userName}, #{totalAmount}, #{orderStatus}, #{shippingAddress}, #{paymentMethod})
     </insert>
     
     <select id="selectByUserId" parameterType="Integer" resultType="OrderVO">
@@ -14,21 +14,18 @@
     </select>
     
     <select id="selectById" parameterType="Integer" resultType="OrderVO">
-        SELECT o.*, u.Username
-        FROM Orders o, User u
-        WHERE o.UserID = u.UserID AND o.OrderID = #{orderID}
+        SELECT * FROM Orders
+        WHERE OrderID = #{orderID}
     </select>
     
     <select id="selectAllOrders" resultType="OrderVO">
-        SELECT o.*, u.Username
-        FROM Orders o, User u
-        WHERE o.UserID = u.UserID
-        ORDER BY o.OrderID DESC
+        SELECT * FROM Orders
+        ORDER BY OrderID DESC
     </select>
     
     <update id="updateStatus">
         UPDATE Orders 
-        SET Status = #{status}
+        SET OrderStatus = #{status}
         WHERE OrderID = #{orderID}
     </update>
     

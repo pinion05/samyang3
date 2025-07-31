@@ -32,58 +32,44 @@ public class OrderService {
     @Autowired
     private CartService cartService;
     
-    // 주문 생성 (장바구니 → 주문)
+    // 주문 생성 (OrderVO와 장바구니 아이템 리스트로)
     @Transactional(rollbackFor = Exception.class)
-    public OrderVO createOrder(Integer userID, String shippingName, String shippingPhone, String shippingAddress) throws Exception {
-        // 1. 장바구니 조회
-        List<CartVO> cartList = cartMapper.selectByUserId(userID);
-        if (cartList.isEmpty()) {
-            throw new Exception("장바구니가 비어있습니다.");
-        }
-        
-        // 2. 주문 총액 계산
-        int totalAmount = cartService.calculateTotalAmount(userID);
-        
-        // 3. 주문 생성
-        OrderVO order = new OrderVO();
-        order.setUserID(userID);
-        order.setTotalAmount(totalAmount);
-        order.setStatus("pending");
-        order.setShippingName(shippingName);
-        order.setShippingPhone(shippingPhone);
-        order.setShippingAddress(shippingAddress);
-        
-        if (orderMapper.insertOrder(order) <= 0) {
-            throw new Exception("주문 생성에 실패했습니다.");
-        }
-        
-        // 4. 주문 상품 생성
-        List<OrderItemVO> orderItems = new ArrayList<>();
-        for (CartVO cart : cartList) {
-            // 재고 확인
-            if (productMapper.updateStock(cart.getProductID(), cart.getQuantity()) <= 0) {
-                throw new Exception("재고가 부족합니다: " + cart.getProductName());
+    public Long createOrder(OrderVO order, List<CartVO> cartItems) {
+        try {
+            if (cartItems.isEmpty()) {
+                throw new Exception("장바구니가 비어있습니다.");
             }
             
-            // 주문 상품 생성
-            OrderItemVO orderItem = new OrderItemVO();
-            orderItem.setOrderID(order.getOrderID());
-            orderItem.setProductID(cart.getProductID());
-            orderItem.setProductName(cart.getProductName());
-            orderItem.setQuantity(cart.getQuantity());
-            orderItem.setPrice(cart.getPrice());
-            orderItems.add(orderItem);
+            // 1. 주문 생성
+            if (orderMapper.insertOrder(order) <= 0) {
+                throw new Exception("주문 생성에 실패했습니다.");
+            }
+            
+            // 2. 주문 상품 생성
+            for (CartVO cart : cartItems) {
+                // 재고 차감
+                if (productMapper.updateStock(cart.getProductID(), cart.getQuantity()) <= 0) {
+                    throw new Exception("재고가 부족합니다: " + cart.getProductName());
+                }
+                
+                // 주문 상품 생성
+                OrderItemVO orderItem = new OrderItemVO();
+                orderItem.setOrderID(order.getOrderID());
+                orderItem.setProductID(cart.getProductID());
+                orderItem.setProductName(cart.getProductName());
+                orderItem.setQuantity(cart.getQuantity());
+                orderItem.setPrice(cart.getPrice());
+                
+                if (orderItemMapper.insertOrderItem(orderItem) <= 0) {
+                    throw new Exception("주문 상품 생성에 실패했습니다.");
+                }
+            }
+            
+            return order.getOrderID().longValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
-        
-        // 5. 주문 상품 저장
-        if (orderItems.size() > 0) {
-            orderItemMapper.insertOrderItems(orderItems);
-        }
-        
-        // 6. 장바구니 비우기
-        cartMapper.deleteAllByUserId(userID);
-        
-        return order;
     }
     
     // 사용자의 주문 목록
@@ -92,8 +78,8 @@ public class OrderService {
     }
     
     // 주문 상세 조회
-    public OrderVO getOrderDetail(Integer orderID) {
-        return orderMapper.selectById(orderID);
+    public OrderVO getOrderById(Long orderID) {
+        return orderMapper.selectById(orderID.intValue());
     }
     
     // 주문 상품 목록
@@ -114,5 +100,10 @@ public class OrderService {
     // 최근 주문 조회
     public OrderVO getLatestOrder(Integer userID) {
         return orderMapper.selectLatestByUserId(userID);
+    }
+    
+    // 주문 취소
+    public boolean cancelOrder(Long orderID) {
+        return orderMapper.updateStatus(orderID.intValue(), "주문취소") > 0;
     }
 }
