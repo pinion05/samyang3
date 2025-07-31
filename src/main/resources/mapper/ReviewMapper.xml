@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="com.farm404.samyang3.mapper.ReviewMapper">
+    
+    <!-- 상품별 리뷰 목록 -->
+    <select id="selectByProductId" resultType="com.farm404.samyang3.domain.ReviewVO">
+        SELECT * FROM Review 
+        WHERE ProductID = #{productId}
+        ORDER BY ReviewDate DESC
+    </select>
+    
+    <!-- 사용자별 리뷰 목록 -->
+    <select id="selectByUserId" resultType="com.farm404.samyang3.domain.ReviewVO">
+        SELECT * FROM Review 
+        WHERE UserID = #{userId}
+        ORDER BY ReviewDate DESC
+    </select>
+    
+    <!-- 주문별 리뷰 조회 -->
+    <select id="selectByOrderId" resultType="com.farm404.samyang3.domain.ReviewVO">
+        SELECT * FROM Review 
+        WHERE OrderID = #{orderId}
+    </select>
+    
+    <!-- 리뷰 단건 조회 -->
+    <select id="selectById" resultType="com.farm404.samyang3.domain.ReviewVO">
+        SELECT * FROM Review 
+        WHERE ReviewID = #{reviewId}
+    </select>
+    
+    <!-- 리뷰 등록 -->
+    <insert id="insert" parameterType="com.farm404.samyang3.domain.ReviewVO" useGeneratedKeys="true" keyProperty="reviewID">
+        INSERT INTO Review (UserID, ProductID, OrderID, Username, Rating, Comment)
+        VALUES (#{userID}, #{productID}, #{orderID}, #{username}, #{rating}, #{comment})
+    </insert>
+    
+    <!-- 리뷰 수정 -->
+    <update id="update" parameterType="com.farm404.samyang3.domain.ReviewVO">
+        UPDATE Review 
+        SET Rating = #{rating}, 
+            Comment = #{comment}
+        WHERE ReviewID = #{reviewID}
+    </update>
+    
+    <!-- 리뷰 삭제 -->
+    <delete id="delete">
+        DELETE FROM Review 
+        WHERE ReviewID = #{reviewId}
+    </delete>
+    
+    <!-- 평균 평점 -->
+    <select id="selectAverageRating" resultType="Double">
+        SELECT AVG(Rating) 
+        FROM Review 
+        WHERE ProductID = #{productId}
+    </select>
+    
+</mapper>

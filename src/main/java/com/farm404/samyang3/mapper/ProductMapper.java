@@ -30,4 +30,7 @@ public interface ProductMapper {
     
     // 카테고리 목록
     List<String> selectCategories();
+    
+    // 상품 검색
+    List<ProductVO> searchProducts(String keyword);
 }

@@ -25,13 +25,18 @@ public class ProductService {
     }
     
     // 상품 상세 조회
-    public ProductVO getProductById(Integer productID) {
-        return productMapper.selectById(productID);
+    public ProductVO getProductById(Long productID) {
+        return productMapper.selectById(productID.intValue());
     }
     
     // 카테고리 목록 조회
-    public List<String> getCategories() {
+    public List<String> getAllCategories() {
         return productMapper.selectCategories();
+    }
+    
+    // 상품 검색
+    public List<ProductVO> searchProducts(String keyword) {
+        return productMapper.searchProducts(keyword);
     }
     
     // 재고 확인
@@ -56,7 +61,7 @@ public class ProductService {
     }
     
     // 상품 삭제 (관리자)
-    public boolean deleteProduct(Integer productID) {
-        return productMapper.deleteProduct(productID) > 0;
+    public boolean deleteProduct(Long productID) {
+        return productMapper.deleteProduct(productID.intValue()) > 0;
     }
 }

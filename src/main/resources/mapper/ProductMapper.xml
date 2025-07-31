@@ -15,8 +15,8 @@
     </select>
     
     <insert id="insertProduct" parameterType="ProductVO" useGeneratedKeys="true" keyProperty="productID">
-        INSERT INTO Product (ProductName, Category, Description, Price, Stock, ImageUrl)
-        VALUES (#{productName}, #{category}, #{description}, #{price}, #{stock}, #{imageUrl})
+        INSERT INTO Product (ProductName, Category, Description, Price, Stock, ImageURL)
+        VALUES (#{productName}, #{category}, #{description}, #{price}, #{stock}, #{imageURL})
     </insert>
     
     <update id="updateProduct" parameterType="ProductVO">
@@ -26,7 +26,7 @@
             Description = #{description},
             Price = #{price},
             Stock = #{stock},
-            ImageUrl = #{imageUrl}
+            ImageURL = #{imageURL}
         WHERE ProductID = #{productID}
     </update>
     
@@ -42,6 +42,14 @@
     
     <select id="selectCategories" resultType="String">
         SELECT DISTINCT Category FROM Product WHERE Category IS NOT NULL ORDER BY Category
+    </select>
+    
+    <select id="searchProducts" parameterType="String" resultType="ProductVO">
+        SELECT * FROM Product 
+        WHERE ProductName LIKE CONCAT('%', #{keyword}, '%') 
+           OR Description LIKE CONCAT('%', #{keyword}, '%')
+           OR Category LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY ProductID DESC
     </select>
 
 </mapper>
