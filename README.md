@@ -54,6 +54,109 @@ Samyang3는 농산물(씨앗, 모종 등)을 판매하는 간단한 이커머스
 프로젝트는 전통적인 MVC 패턴을 따르며, 계층형 아키텍처로 구성되어 있습니다.
 
 ### 아키텍처 다이어그램
+
+```mermaid
+erDiagram
+    User {
+        INT UserID PK
+        VARCHAR Username
+        VARCHAR Password
+        VARCHAR Email
+        VARCHAR FullName
+        VARCHAR Phone
+        TEXT Address
+        BOOLEAN IsAdmin
+        DATETIME CreatedAt
+    }
+    
+    Product {
+        INT ProductID PK
+        VARCHAR ProductName
+        VARCHAR Category
+        TEXT Description
+        INT Price
+        INT Stock
+        VARCHAR ImageUrl
+        DATETIME CreatedAt
+    }
+    
+    Cart {
+        INT CartID PK
+        INT UserID
+        INT ProductID
+        INT Quantity
+        DATETIME CreatedAt
+    }
+    
+    Orders {
+        INT OrderID PK
+        INT UserID
+        INT TotalAmount
+        VARCHAR Status
+        VARCHAR ShippingName
+        VARCHAR ShippingPhone
+        TEXT ShippingAddress
+        DATETIME CreatedAt
+    }
+    
+    OrderItem {
+        INT OrderItemID PK
+        INT OrderID
+        INT ProductID
+        VARCHAR ProductName
+        INT Quantity
+        INT Price
+        DATETIME CreatedAt
+    }
+    
+    Review {
+        INT ReviewID PK
+        INT UserID
+        INT ProductID
+        VARCHAR Username
+        INT Rating
+        VARCHAR Title
+        TEXT Content
+        DATETIME CreatedAt
+    }
+    
+    Post {
+        INT PostID PK
+        INT UserID
+        VARCHAR Username
+        VARCHAR Title
+        TEXT Content
+        VARCHAR Category
+        INT ViewCount
+        DATETIME CreatedAt
+    }
+    
+    Comment {
+        INT CommentID PK
+        INT PostID
+        INT UserID
+        VARCHAR Username
+        TEXT Content
+        DATETIME CreatedAt
+    }
+    
+    User ||--o{ Cart : "has"
+    User ||--o{ Orders : "places"
+    User ||--o{ Review : "writes"
+    User ||--o{ Post : "creates"
+    User ||--o{ Comment : "writes"
+    Product ||--o{ Cart : "contains"
+    Product ||--o{ OrderItem : "ordered"
+    Product ||--o{ Review : "reviewed"
+    Orders ||--o{ OrderItem : "contains"
+    Post ||--o{ Comment : "has"
+```
+
+
+
+
+
+
 ![Architecture Diagram](docs/architecture-diagram.md)
 
 주요 구성 요소:
