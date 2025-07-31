@@ -56,8 +56,8 @@
                                 ${post.title}
                             </a>
                         </td>
-                        <td>${post.authorName}</td>
-                        <td><fmt:formatDate value="${post.createdDate}" pattern="yyyy.MM.dd"/></td>
+                        <td>${post.username}</td>
+                        <td>${post.createdAt.toLocalDate()}</td>
                         <td>${post.viewCount}</td>
                     </tr>
                 </c:forEach>

@@ -26,8 +26,8 @@
     
     <!-- 댓글 작성 -->
     <insert id="insertComment" parameterType="com.farm404.samyang3.domain.CommentVO" useGeneratedKeys="true" keyProperty="commentID">
-        INSERT INTO Comment (PostID, UserID, Content, AuthorName)
-        VALUES (#{postID}, #{userID}, #{content}, #{authorName})
+        INSERT INTO Comment (PostID, UserID, Username, Content)
+        VALUES (#{postID}, #{userID}, #{username}, #{content})
     </insert>
     
     <!-- 댓글 삭제 -->

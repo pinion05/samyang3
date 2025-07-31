@@ -19,8 +19,8 @@
                 <span class="category-label">${post.category}</span>
                 <h1>${post.title}</h1>
                 <div class="post-meta">
-                    <span class="author">${post.authorName}</span>
-                    <span class="date"><fmt:formatDate value="${post.createdDate}" pattern="yyyy.MM.dd HH:mm"/></span>
+                    <span class="author">${post.username}</span>
+                    <span class="date">${post.createdAt}</span>
                     <span class="views">조회 ${post.viewCount}</span>
                 </div>
             </div>
@@ -59,8 +59,8 @@
             <c:forEach items="${comments}" var="comment">
                 <div class="comment-item">
                     <div class="comment-header">
-                        <span class="comment-author">${comment.authorName}</span>
-                        <span class="comment-date"><fmt:formatDate value="${comment.createdDate}" pattern="yyyy.MM.dd HH:mm"/></span>
+                        <span class="comment-author">${comment.username}</span>
+                        <span class="comment-date">${comment.createdAt}</span>
                         <c:if test="${sessionScope.loginUser.userID eq comment.userID or sessionScope.loginUser.isAdmin}">
                             <form action="${pageContext.request.contextPath}/post/comment/delete/${comment.commentID}" method="post" class="comment-delete">
                                 <input type="hidden" name="postId" value="${post.postID}">

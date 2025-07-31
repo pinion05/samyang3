@@ -45,7 +45,7 @@
                 
                 <div class="form-group">
                     <label>가입일</label>
-                    <input type="text" value="${user.registeredDate}" disabled>
+                    <input type="text" value="${user.createdAt}" disabled>
                 </div>
                 
                 <button type="submit" class="btn btn-primary">정보 수정</button>

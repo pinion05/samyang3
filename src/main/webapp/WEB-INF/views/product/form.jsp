@@ -43,10 +43,10 @@
         <div class="form-group">
             <label for="imageFile">상품 이미지</label>
             <input type="file" id="imageFile" name="imageFile" accept="image/*">
-            <c:if test="${not empty product.imageURL}">
+            <c:if test="${not empty product.imageUrl}">
                 <div class="current-image">
                     <p>현재 이미지:</p>
-                    <img src="${pageContext.request.contextPath}${product.imageURL}" alt="현재 이미지">
+                    <img src="${pageContext.request.contextPath}${product.imageUrl}" alt="현재 이미지">
                 </div>
             </c:if>
         </div>

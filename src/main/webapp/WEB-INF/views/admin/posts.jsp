@@ -102,7 +102,7 @@
                         <td>${post.category}</td>
                         <td>${post.title}</td>
                         <td>${post.userName}</td>
-                        <td><fmt:formatDate value="${post.createdDate}" pattern="yyyy-MM-dd"/></td>
+                        <td>${post.createdAt.toLocalDate()}</td>
                         <td>${post.viewCount}</td>
                         <td>
                             <a href="/community/posts/${post.postID}" class="btn btn-sm">보기</a>

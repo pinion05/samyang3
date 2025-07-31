@@ -111,7 +111,7 @@
                         <td>${user.fullName}</td>
                         <td>${user.email}</td>
                         <td>${user.phone}</td>
-                        <td><fmt:formatDate value="${user.createdDate}" pattern="yyyy-MM-dd"/></td>
+                        <td>${user.createdAt.toLocalDate()}</td>
                         <td>
                             <c:if test="${user.isAdmin}">
                                 <span class="admin-badge">관리자</span>

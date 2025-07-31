@@ -115,10 +115,10 @@
                 <c:forEach items="${products}" var="product">
                     <tr>
                         <td>
-                            <c:if test="${not empty product.imageURL}">
-                                <img src="${product.imageURL}" alt="${product.productName}" class="product-image">
+                            <c:if test="${not empty product.imageUrl}">
+                                <img src="${product.imageUrl}" alt="${product.productName}" class="product-image">
                             </c:if>
-                            <c:if test="${empty product.imageURL}">
+                            <c:if test="${empty product.imageUrl}">
                                 <div style="width:50px;height:50px;background:#ddd;border-radius:4px;"></div>
                             </c:if>
                         </td>

@@ -42,8 +42,8 @@
                 <a href="${pageContext.request.contextPath}/product/${product.productID}">
                     <div class="product-image">
                         <c:choose>
-                            <c:when test="${not empty product.imageURL}">
-                                <img src="${pageContext.request.contextPath}${product.imageURL}" alt="${product.productName}">
+                            <c:when test="${not empty product.imageUrl}">
+                                <img src="${pageContext.request.contextPath}${product.imageUrl}" alt="${product.productName}">
                             </c:when>
                             <c:otherwise>
                                 <img src="${pageContext.request.contextPath}/images/no-image.png" alt="이미지 없음">

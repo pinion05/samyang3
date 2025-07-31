@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "mcp__mysql-mcp-server__run_sql_query"
+      "mcp__mysql-mcp-server__run_sql_query",
+      "mcp__clear-thought__sequentialthinking",
+      "Bash(git add:*)"
     ],
     "deny": []
   }

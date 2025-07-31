@@ -31,7 +31,7 @@
                                         ${post.title}
                                     </a>
                                 </td>
-                                <td><fmt:formatDate value="${post.createdDate}" pattern="yyyy.MM.dd"/></td>
+                                <td>${post.createdAt.toLocalDate()}</td>
                                 <td>${post.viewCount}</td>
                                 <td class="actions">
                                     <a href="${pageContext.request.contextPath}/post/edit/${post.postID}" class="btn btn-secondary btn-sm">수정</a>

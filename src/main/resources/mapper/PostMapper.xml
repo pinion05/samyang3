@@ -29,7 +29,7 @@
         SELECT * FROM Post 
         WHERE Title LIKE CONCAT('%', #{keyword}, '%') 
            OR Content LIKE CONCAT('%', #{keyword}, '%')
-           OR AuthorName LIKE CONCAT('%', #{keyword}, '%')
+           OR Username LIKE CONCAT('%', #{keyword}, '%')
         ORDER BY PostID DESC
     </select>
     
@@ -41,8 +41,8 @@
     
     <!-- 게시글 작성 -->
     <insert id="insertPost" parameterType="com.farm404.samyang3.domain.PostVO" useGeneratedKeys="true" keyProperty="postID">
-        INSERT INTO Post (UserID, Title, Content, AuthorName, Category)
-        VALUES (#{userID}, #{title}, #{content}, #{authorName}, #{category})
+        INSERT INTO Post (UserID, Title, Content, Username, Category)
+        VALUES (#{userID}, #{title}, #{content}, #{username}, #{category})
     </insert>
     
     <!-- 게시글 수정 -->
