@@ -6,6 +6,8 @@
 - [프로젝트 개요](#프로젝트-개요)
 - [기술 스택](#기술-스택)
 - [주요 기능](#주요-기능)
+- [Use Case Diagram](#use-case-diagram)
+- [Class Diagram](#class-diagram)
 - [시스템 아키텍처](#시스템-아키텍처)
 - [데이터베이스 구조](#데이터베이스-구조)
 - [프로세스 플로우](#프로세스-플로우)
@@ -48,6 +50,251 @@ Samyang3는 농산물(씨앗, 모종 등)을 판매하는 간단한 이커머스
 - **상품 관리**: 상품 등록/수정/삭제
 - **주문 관리**: 주문 상태 변경, 배송 관리
 - **게시글 관리**: 커뮤니티 게시글 관리
+
+## 🎭 Use Case Diagram
+
+시스템의 주요 액터(Actor)와 유스케이스(Use Case)를 나타낸 다이어그램입니다.
+
+```mermaid
+graph TB
+    subgraph "Actors"
+        Guest[비회원]
+        User[회원]
+        Admin[관리자]
+    end
+    
+    subgraph "회원 관리"
+        UC1[회원가입]
+        UC2[로그인]
+        UC3[마이페이지 조회]
+        UC4[회원정보 수정]
+        UC5[회원 탈퇴]
+    end
+    
+    subgraph "상품 관리"
+        UC6[상품 목록 조회]
+        UC7[상품 상세 조회]
+        UC8[상품 검색]
+        UC9[장바구니 담기]
+        UC10[장바구니 조회]
+        UC11[장바구니 수정/삭제]
+    end
+    
+    subgraph "주문 관리"
+        UC12[주문하기]
+        UC13[주문 내역 조회]
+        UC14[주문 상태 조회]
+        UC15[주문 취소]
+    end
+    
+    subgraph "리뷰 관리"
+        UC16[리뷰 작성]
+        UC17[리뷰 조회]
+        UC18[리뷰 수정]
+        UC19[리뷰 삭제]
+    end
+    
+    subgraph "커뮤니티"
+        UC20[게시글 목록 조회]
+        UC21[게시글 상세 조회]
+        UC22[게시글 작성]
+        UC23[게시글 수정/삭제]
+        UC24[댓글 작성]
+        UC25[댓글 수정/삭제]
+    end
+    
+    subgraph "관리자 기능"
+        UC26[대시보드 조회]
+        UC27[회원 관리]
+        UC28[상품 등록/수정/삭제]
+        UC29[주문 관리]
+        UC30[게시글 관리]
+    end
+    
+    %% Guest relationships
+    Guest --> UC1
+    Guest --> UC2
+    Guest --> UC6
+    Guest --> UC7
+    Guest --> UC8
+    Guest --> UC20
+    Guest --> UC21
+    
+    %% User relationships
+    User --> UC2
+    User --> UC3
+    User --> UC4
+    User --> UC5
+    User --> UC6
+    User --> UC7
+    User --> UC8
+    User --> UC9
+    User --> UC10
+    User --> UC11
+    User --> UC12
+    User --> UC13
+    User --> UC14
+    User --> UC15
+    User --> UC16
+    User --> UC17
+    User --> UC18
+    User --> UC19
+    User --> UC20
+    User --> UC21
+    User --> UC22
+    User --> UC23
+    User --> UC24
+    User --> UC25
+    
+    %% Admin relationships
+    Admin --> UC26
+    Admin --> UC27
+    Admin --> UC28
+    Admin --> UC29
+    Admin --> UC30
+    
+    %% Include relationships
+    UC12 -.include.-> UC10
+    UC16 -.include.-> UC13
+```
+
+## 🏛️ Class Diagram
+
+시스템의 주요 도메인 클래스와 그들 간의 관계를 나타낸 다이어그램입니다.
+
+```mermaid
+classDiagram
+    class User {
+        -int userID
+        -String username
+        -String password
+        -String email
+        -String fullName
+        -String phone
+        -String address
+        -boolean isAdmin
+        -DateTime createdAt
+        +login()
+        +logout()
+        +register()
+        +updateProfile()
+    }
+    
+    class Product {
+        -int productID
+        -String productName
+        -String category
+        -String description
+        -int price
+        -int stock
+        -String imageUrl
+        -DateTime createdAt
+        +getDetails()
+        +updateStock()
+        +checkAvailability()
+    }
+    
+    class Cart {
+        -int cartID
+        -int userID
+        -int productID
+        -int quantity
+        -DateTime createdAt
+        +addItem()
+        +removeItem()
+        +updateQuantity()
+        +clearCart()
+    }
+    
+    class Orders {
+        -int orderID
+        -int userID
+        -int totalAmount
+        -String status
+        -String shippingName
+        -String shippingPhone
+        -String shippingAddress
+        -DateTime createdAt
+        +createOrder()
+        +updateStatus()
+        +cancelOrder()
+        +getOrderDetails()
+    }
+    
+    class OrderItem {
+        -int orderItemID
+        -int orderID
+        -int productID
+        -String productName
+        -int quantity
+        -int price
+        -DateTime createdAt
+        +calculateSubtotal()
+    }
+    
+    class Review {
+        -int reviewID
+        -int userID
+        -int productID
+        -String username
+        -int rating
+        -String title
+        -String content
+        -DateTime createdAt
+        +createReview()
+        +updateReview()
+        +deleteReview()
+    }
+    
+    class Post {
+        -int postID
+        -int userID
+        -String username
+        -String title
+        -String content
+        -String category
+        -int viewCount
+        -DateTime createdAt
+        +createPost()
+        +updatePost()
+        +deletePost()
+        +increaseViewCount()
+    }
+    
+    class Comment {
+        -int commentID
+        -int postID
+        -int userID
+        -String username
+        -String content
+        -DateTime createdAt
+        +createComment()
+        +updateComment()
+        +deleteComment()
+    }
+    
+    %% Relationships
+    User "1" --> "0..*" Cart : has
+    User "1" --> "0..*" Orders : places
+    User "1" --> "0..*" Review : writes
+    User "1" --> "0..*" Post : creates
+    User "1" --> "0..*" Comment : writes
+    
+    Product "1" --> "0..*" Cart : contained in
+    Product "1" --> "0..*" OrderItem : ordered in
+    Product "1" --> "0..*" Review : reviewed by
+    
+    Orders "1" --> "1..*" OrderItem : contains
+    Post "1" --> "0..*" Comment : has
+    
+    Cart "*" --> "1" Product : references
+    Cart "*" --> "1" User : belongs to
+    OrderItem "*" --> "1" Product : references
+    Review "*" --> "1" Product : about
+    Review "*" --> "1" User : written by
+    Comment "*" --> "1" Post : on
+    Comment "*" --> "1" User : written by
+```
 
 ## 🏗 시스템 아키텍처
 
