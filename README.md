@@ -57,100 +57,70 @@ Samyang3는 농산물(씨앗, 모종 등)을 판매하는 간단한 이커머스
 
 
 ```mermaid
-erDiagram
-    User {
-        INT UserID PK
-        VARCHAR Username
-        VARCHAR Password
-        VARCHAR Email
-        VARCHAR FullName
-        VARCHAR Phone
-        TEXT Address
-        BOOLEAN IsAdmin
-        DATETIME CreatedAt
-    }
+graph TB
+    subgraph "Client Layer"
+        Browser[웹 브라우저]
+    end
     
-    Product {
-        INT ProductID PK
-        VARCHAR ProductName
-        VARCHAR Category
-        TEXT Description
-        INT Price
-        INT Stock
-        VARCHAR ImageUrl
-        DATETIME CreatedAt
-    }
+    subgraph "Presentation Layer"
+        JSP[JSP Views]
+        Static[Static Resources<br/>CSS/JS/Images]
+    end
     
-    Cart {
-        INT CartID PK
-        INT UserID
-        INT ProductID
-        INT Quantity
-        DATETIME CreatedAt
-    }
+    subgraph "Controller Layer"
+        HC[HomeController]
+        UC[UserController]
+        PC[ProductController]
+        CC[CartController]
+        OC[OrderController]
+        RC[ReviewController]
+        PoC[PostController]
+        AC[AdminController]
+    end
     
-    Orders {
-        INT OrderID PK
-        INT UserID
-        INT TotalAmount
-        VARCHAR Status
-        VARCHAR ShippingName
-        VARCHAR ShippingPhone
-        TEXT ShippingAddress
-        DATETIME CreatedAt
-    }
+    subgraph "Interceptor Layer"
+        LI[LoginInterceptor]
+        AI[AdminInterceptor]
+    end
     
-    OrderItem {
-        INT OrderItemID PK
-        INT OrderID
-        INT ProductID
-        VARCHAR ProductName
-        INT Quantity
-        INT Price
-        DATETIME CreatedAt
-    }
+    subgraph "Service Layer"
+        US[UserService]
+        PS[ProductService]
+        CS[CartService]
+        OS[OrderService]
+        RS[ReviewService]
+        PoS[PostService]
+        ComS[CommentService]
+    end
     
-    Review {
-        INT ReviewID PK
-        INT UserID
-        INT ProductID
-        VARCHAR Username
-        INT Rating
-        VARCHAR Title
-        TEXT Content
-        DATETIME CreatedAt
-    }
+    subgraph "Mapper Layer"
+        UM[UserMapper]
+        PM[ProductMapper]
+        CM[CartMapper]
+        OM[OrderMapper]
+        RM[ReviewMapper]
+        PoM[PostMapper]
+        ComM[CommentMapper]
+    end
     
-    Post {
-        INT PostID PK
-        INT UserID
-        VARCHAR Username
-        VARCHAR Title
-        TEXT Content
-        VARCHAR Category
-        INT ViewCount
-        DATETIME CreatedAt
-    }
+    subgraph "Database"
+        DB[(MySQL Database)]
+    end
     
-    Comment {
-        INT CommentID PK
-        INT PostID
-        INT UserID
-        VARCHAR Username
-        TEXT Content
-        DATETIME CreatedAt
-    }
-    
-    User ||--o{ Cart : "has"
-    User ||--o{ Orders : "places"
-    User ||--o{ Review : "writes"
-    User ||--o{ Post : "creates"
-    User ||--o{ Comment : "writes"
-    Product ||--o{ Cart : "contains"
-    Product ||--o{ OrderItem : "ordered"
-    Product ||--o{ Review : "reviewed"
-    Orders ||--o{ OrderItem : "contains"
-    Post ||--o{ Comment : "has"
+    Browser --> JSP
+    Browser --> Static
+    JSP --> HC & UC & PC & CC & OC & RC & PoC & AC
+    HC & UC & PC & CC & OC & RC & PoC & AC --> LI
+    AC --> AI
+    LI & AI --> US & PS & CS & OS & RS & PoS & ComS
+    US --> UM
+    PS --> PM
+    CS --> CM
+    OS --> OM
+    RS --> RM
+    PoS --> PoM
+    ComS --> ComM
+    UM & PM & CM & OM & RM & PoM & ComM --> DB
 ```
 
 ![Architecture Diagram](docs/architecture-diagram.md)
