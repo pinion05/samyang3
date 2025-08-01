@@ -29,7 +29,7 @@ public class ProductController {
     @Autowired
     private ReviewService reviewService;
     
-    // 상품 목록
+    // 상품 목록 보여주기... category랑 keyword로 검색도 가능
     @GetMapping
     public String list(@RequestParam(required = false) String category,
                       @RequestParam(required = false) String keyword,
@@ -53,7 +53,10 @@ public class ProductController {
         return "product/list";
     }
     
-    // 상품 상세
+    /**
+     * 상품 상세페이지
+     * 근데 id가 없으면 어떻게 되는거지?
+     */
     @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
         ProductVO product = productService.getProductById(id);
@@ -100,7 +103,7 @@ public class ProductController {
             return "redirect:/";
         }
         
-        // 이미지 파일 처리
+        /* 이미지 업로드 처리하는 부분임 */
         if (imageFile != null && !imageFile.isEmpty()) {
             String uploadDir = "src/main/resources/static/images/products/";
             File dir = new File(uploadDir);
@@ -110,7 +113,7 @@ public class ProductController {
             
             String originalFilename = imageFile.getOriginalFilename();
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            String savedFilename = UUID.randomUUID().toString() + extension;
+            String savedFilename = UUID.randomUUID().toString() + extension; // UUID써서 파일명 중복안되게..
             
             File saveFile = new File(uploadDir + savedFilename);
             imageFile.transferTo(saveFile);
@@ -203,9 +206,10 @@ public class ProductController {
         UserVO loginUser = (UserVO) session.getAttribute(SessionUtil.LOGIN_USER);
         
         if (loginUser == null || !loginUser.getIsAdmin()) {
-            return "redirect:/";
+            return "redirect:/";  //관리자 아니면 못지움
         }
         
+        // 삭제처리..
         if (productService.deleteProduct(id)) {
             redirectAttributes.addFlashAttribute("success", "상품이 삭제되었습니다.");
         } else {

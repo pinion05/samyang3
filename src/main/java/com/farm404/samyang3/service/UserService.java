@@ -14,7 +14,7 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
     
-    // 회원가입
+    /* 회원가입하는 메서드 */
     public boolean register(UserVO user) {
         // 아이디 중복 체크
         if (userMapper.selectByUsername(user.getUsername()) != null) {
@@ -37,7 +37,7 @@ public class UserService {
     public UserVO login(String username, String password) {
         UserVO user = userMapper.selectByUsername(username);
         
-        // 사용자가 존재하고 비밀번호가 일치하는 경우
+        //사용자가 존재하고 비밀번호가 일치하는 경우... 암호화 안함ㅋㅋ
         if (user != null && user.getPassword().equals(password)) {
             return user;
         }
@@ -75,7 +75,9 @@ public class UserService {
         return userMapper.selectAllUsers();
     }
     
-    // 사용자 수
+    /**
+     * 사용자 수 세는거
+     */
     public int getUserCount() {
         return userMapper.countUsers();
     }
@@ -84,7 +86,7 @@ public class UserService {
     public boolean toggleAdminStatus(Integer userId) {
         UserVO user = userMapper.selectById(userId);
         if (user != null) {
-            return userMapper.updateAdminStatus(userId, !user.getIsAdmin()) > 0;
+            return userMapper.updateAdminStatus(userId, !user.getIsAdmin()) > 0;  //이거 맞나??
         }
         return false;
     }

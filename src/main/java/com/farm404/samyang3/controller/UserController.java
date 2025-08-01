@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+// 사용자 컨트롤러인데 뭔가 이상함...
 @Controller
 public class UserController {
     
@@ -20,7 +21,7 @@ public class UserController {
     @Autowired
     private CartService cartService;
     
-    // 로그인 페이지
+    /* 로긴화면 보여주는거 */
     @GetMapping("/login")
     public String loginForm() {
         return "user/login";
@@ -39,7 +40,7 @@ public class UserController {
             // 로그인 성공
             session.setAttribute(SessionUtil.LOGIN_USER, user);
             
-            // 장바구니 개수 세션에 저장
+            //장바구니 개수 세션에 저장하는데 이거 꼭 여기서 해야하나
             int cartCount = cartService.getCartCount(user.getUserID());
             session.setAttribute(SessionUtil.CART_COUNT, cartCount);
             
@@ -71,7 +72,10 @@ public class UserController {
         return "user/register";
     }
     
-    // 회원가입 처리
+    /**
+     * 회원가입 처리하는 메소드 만드느라 힘들었음
+     * user객체로 받아서 처리함
+     */
     @PostMapping("/register")
     public String register(UserVO user, RedirectAttributes redirectAttributes) {
         
@@ -118,10 +122,10 @@ public class UserController {
     @GetMapping("/check/username")
     @ResponseBody
     public boolean checkUsername(@RequestParam String username) {
-        return userService.checkUsername(username);
+        return userService.checkUsername(username);  // true면 사용가능한건지 불가능한건지.. 헷갈림
     }
     
-    // 이메일 중복 체크 (AJAX)
+    /* 이메일 중복체크임 ajax로 함 */
     @GetMapping("/check/email")
     @ResponseBody
     public boolean checkEmail(@RequestParam String email) {

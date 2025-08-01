@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
+// 장바구니 서비스 
 @Service
 @Transactional
 public class CartService {
@@ -19,7 +20,11 @@ public class CartService {
         return cartMapper.selectByUserId(userID);
     }
     
-    // 장바구니에 상품 추가
+    /**
+     * 장바구니에 상품 추가하는 메소드인데
+     * 이미 있으면 수량증가시키고
+     * 없으면 새로 추가함
+     */
     public boolean addToCart(CartVO cart) {
         // 이미 장바구니에 있는 상품인지 확인
         CartVO existingCart = cartMapper.selectByUserIdAndProductId(cart.getUserID(), cart.getProductID());
@@ -57,12 +62,12 @@ public class CartService {
         return cartMapper.countByUserId(userID);
     }
     
-    // 장바구니 총 금액 계산 (CartVO 리스트 기반)
+    /* 장바구니 총 금액 계산 (CartVO 리스트 기반) */
     public int calculateTotalAmount(List<CartVO> cartItems) {
         int total = 0;
         
         for (CartVO cart : cartItems) {
-            total += cart.getPrice() * cart.getQuantity();
+            total += cart.getPrice() * cart.getQuantity();  //가격 * 수량해서 더함...
         }
         
         return total;

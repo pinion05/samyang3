@@ -13,6 +13,6 @@ public class OrderVO {
     private String paymentMethod;
     private LocalDateTime orderDate;
     
-    // 조인 없이 사용하기 위한 추가 필드
+    // 조인 없이 사용하기 위한 추가 필드... DB 정규화 무시ㅋ
     private String userName;
 }
