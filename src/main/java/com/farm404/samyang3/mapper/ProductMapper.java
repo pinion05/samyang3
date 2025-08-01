@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
+/* 상품 매퍼 인터페이스... MyBatis로 구현 */
 @Mapper
 public interface ProductMapper {
     // 전체 상품 목록
@@ -25,7 +26,9 @@ public interface ProductMapper {
     // 상품 삭제 (관리자)
     int deleteProduct(Integer productID);
     
-    // 재고 차감
+    /** 재고 차감
+     * quantity만큼 차감함
+     */
     int updateStock(@Param("productID") Integer productID, @Param("quantity") Integer quantity);
     
     // 카테고리 목록
@@ -37,6 +40,6 @@ public interface ProductMapper {
     // 상품 개수
     int countProducts();
     
-    // 상위 상품 목록
+    // 상위 상품 목록... 베스트셀러인데 구현 안됨ㅋ
     List<ProductVO> selectTopProducts(int limit);
 }

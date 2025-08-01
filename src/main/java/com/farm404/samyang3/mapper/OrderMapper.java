@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
+// 주문 매퍼... 
 @Mapper
 public interface OrderMapper {
     // 주문 생성
@@ -19,7 +20,9 @@ public interface OrderMapper {
     // 전체 주문 목록 (관리자)
     List<OrderVO> selectAllOrders();
     
-    // 주문 상태 변경 (관리자)
+    /** 주문 상태 변경 (관리자)
+     * pending -> shipping -> delivered... 이런식으로
+     */
     int updateStatus(@Param("orderID") Integer orderID, @Param("status") String status);
     
     // 사용자의 최근 주문 1개
@@ -28,7 +31,7 @@ public interface OrderMapper {
     // 주문 개수
     int countOrders();
     
-    // 대기중인 주문 개수
+    /* 대기중인 주문 개수... pending 상태만 */
     int countPendingOrders();
     
     // 최근 주문 목록

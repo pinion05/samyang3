@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/* 주문상품 서비스... 별로 안씀 */
 @Service
 @Transactional
 public class OrderItemService {
@@ -25,14 +26,14 @@ public class OrderItemService {
         return orderItemMapper.insertOrderItem(orderItem) > 0;
     }
     
-    // 주문별 총 금액 계산
+    /** 주문별 총 금액 계산
+     * 배송비는 안들어감 */
     public int calculateOrderTotal(Long orderId) {
         List<OrderItemVO> items = orderItemMapper.selectByOrderId(orderId.intValue());
         int total = 0;
         
         for (OrderItemVO item : items) {
-            total += item.getPrice() * item.getQuantity();
-        }
+            total += item.getPrice() * item.getQuantity();  // 단가 * 수량
         
         return total;
     }

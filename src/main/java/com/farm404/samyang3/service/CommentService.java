@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+//댓글 서비스인데 별로 기능이 없네
 @Service
 @Transactional
 public class CommentService {
@@ -25,7 +26,7 @@ public class CommentService {
         return commentMapper.selectById(commentId.intValue());
     }
     
-    // 댓글 작성
+    /* 댓글 작성 */
     public boolean addComment(CommentVO comment) {
         try {
             return commentMapper.insertComment(comment) > 0;
@@ -35,12 +36,14 @@ public class CommentService {
         }
     }
     
-    // 댓글 삭제
+    /** 댓글 삭제
+     * 댓글 수정 기능은 없음... 왜 안만들었지
+     */
     public boolean deleteComment(Long commentId) {
         try {
             return commentMapper.deleteComment(commentId.intValue()) > 0;
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace();  // 이거 로그로 바꿔야됨
             return false;
         }
     }

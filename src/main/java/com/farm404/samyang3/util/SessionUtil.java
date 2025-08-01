@@ -1,11 +1,14 @@
 package com.farm404.samyang3.util;
 
+// 세션 유틸리티 클래스임
 public class SessionUtil {
     // 세션 키 상수
     public static final String LOGIN_USER = "loginUser";
     public static final String CART_COUNT = "cartCount";
     
-    // 로그인 체크가 필요 없는 URL 패턴
+    /** 로그인 체크가 필요 없는 URL 패턴
+     * static 리소스랑 로그인, 회원가입은 제외해야됨
+     */
     public static final String[] EXCLUDE_PATHS = {
         "/", "/login", "/register", "/product/**", "/static/**", "/css/**", "/js/**"
     };

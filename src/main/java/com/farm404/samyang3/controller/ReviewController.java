@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/* 리뷰 컨트롤러... 리뷰 CRUD 처리 */
 @Controller
 @RequestMapping("/review")
 public class ReviewController {
@@ -40,7 +41,9 @@ public class ReviewController {
         return "review/my";
     }
     
-    // 리뷰 작성 폼 (주문 완료 후)
+    /** 리뷰 작성 폼 (주문 완료 후)
+     * 주문한 상품에 대해서만 리뷰 쓸수있음
+     */
     @GetMapping("/write/{orderId}")
     public String writeForm(@PathVariable Long orderId,
                           HttpSession session,
@@ -59,7 +62,7 @@ public class ReviewController {
             return "redirect:/order/list";
         }
         
-        // 배송완료 상태인지 확인 (여기서는 주문완료 상태에서도 리뷰 작성 가능하도록)
+        /* 배송완료 상태인지 확인 (여기서는 주문완료 상태에서도 리뷰 작성 가능하도록)... 이거 맞나? */
         if (!"주문완료".equals(order.getOrderStatus()) && !"배송완료".equals(order.getOrderStatus())) {
             return "redirect:/order/list";
         }
@@ -89,7 +92,7 @@ public class ReviewController {
         ReviewVO review = new ReviewVO();
         review.setUserID(loginUser.getUserID());
         review.setProductID(productId.intValue());
-        // review doesn't have orderID in the VO
+        // review doesn't have orderID in the VO... 왜 없지??
         review.setUsername(loginUser.getUsername());
         review.setRating(rating);
         review.setTitle(title);
@@ -127,7 +130,7 @@ public class ReviewController {
         return "review/edit";
     }
     
-    // 리뷰 수정 처리
+    /* 리뷰 수정 처리 */
     @PostMapping("/edit/{reviewId}")
     public String edit(@PathVariable Long reviewId,
                       @RequestParam Integer rating,
@@ -160,7 +163,7 @@ public class ReviewController {
         return "redirect:/review/my";
     }
     
-    // 리뷰 삭제
+    // 리뷰 삭제... delete 매핑인데 PostMapping 써도 되나
     @PostMapping("/delete/{reviewId}")
     public String delete(@PathVariable Long reviewId,
                         HttpSession session,

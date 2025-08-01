@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Arrays;
 import java.util.List;
 
+/* 게시판 서비스 */
 @Service
 @Transactional
 public class PostService {
@@ -41,7 +42,7 @@ public class PostService {
         return postMapper.selectById(postId.intValue());
     }
     
-    // 게시글 작성
+    /** 게시글 작성... 실패하면 false */
     public boolean createPost(PostVO post) {
         try {
             return postMapper.insertPost(post) > 0;
@@ -71,14 +72,14 @@ public class PostService {
         }
     }
     
-    // 조회수 증가
+    /* 조회수 증가... 중복조회도 카운트됨ㅋ */
     public void increaseViewCount(Long postId) {
         postMapper.increaseViewCount(postId.intValue());
     }
     
     // 카테고리 목록
     public List<String> getCategories() {
-        // 하드코딩된 카테고리 (나중에 DB에서 가져올 수도 있음)
+        // 하드코딩된 카테고리 (나중에 DB에서 가져올 수도 있음)... 이거 테이블로 빼야되는거 아님?
         return Arrays.asList("일반", "공지사항", "질문답변", "팁과노하우", "후기");
     }
 }

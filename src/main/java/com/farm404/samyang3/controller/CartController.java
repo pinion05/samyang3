@@ -24,7 +24,7 @@ public class CartController {
     @Autowired
     private ProductService productService;
     
-    // 장바구니 목록
+    /* 장바구니 리스트 보여주는거 */
     @GetMapping
     public String list(HttpSession session, Model model) {
         UserVO loginUser = (UserVO) session.getAttribute(SessionUtil.LOGIN_USER);
@@ -55,7 +55,7 @@ public class CartController {
             return "redirect:/login";
         }
         
-        // 재고 확인
+        // 재고 확인하는데 checkStock 메소드명이 맘에 안듬
         if (!productService.checkStock(productId.intValue(), quantity)) {
             redirectAttributes.addFlashAttribute("error", "재고가 부족합니다.");
             return "redirect:/product/" + productId;
@@ -79,7 +79,9 @@ public class CartController {
         return "redirect:/product/" + productId;
     }
     
-    // 수량 변경
+    /**
+     * 수량변경 처리
+     */
     @PostMapping("/update")
     public String update(@RequestParam Long cartId,
                         @RequestParam Integer quantity,
@@ -157,7 +159,7 @@ public class CartController {
         UserVO loginUser = (UserVO) session.getAttribute(SessionUtil.LOGIN_USER);
         
         if (loginUser == null) {
-            return "redirect:/login";
+            return "redirect:/login";  //로그인 안했으면..
         }
         
         if (cartIds == null || cartIds.isEmpty()) {
@@ -165,7 +167,7 @@ public class CartController {
             return "redirect:/cart";
         }
         
-        int deletedCount = 0;
+        int deletedCount = 0;  /* 삭제한 개수 카운트 */
         for (Long cartId : cartIds) {
             CartVO cart = cartService.getCartById(cartId);
             if (cart != null && cart.getUserID().equals(loginUser.getUserID())) {

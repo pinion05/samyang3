@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+// 게시판 컨트롤러
 @Controller
 @RequestMapping("/post")
 public class PostController {
@@ -25,7 +26,7 @@ public class PostController {
     @Autowired
     private CommentService commentService;
     
-    // 게시글 목록
+    /* 게시글 목록... 카테고리랑 검색 기능 있음 */
     @GetMapping
     public String list(@RequestParam(required = false) String category,
                       @RequestParam(required = false) String keyword,
@@ -61,7 +62,7 @@ public class PostController {
         // 조회수 증가
         postService.increaseViewCount(id);
         
-        // 댓글 목록
+        /* 댓글 목록 가져옴 */
         List<CommentVO> comments = commentService.getCommentsByPost(id);
         
         model.addAttribute("post", post);
@@ -82,7 +83,9 @@ public class PostController {
         return "post/write";
     }
     
-    // 게시글 작성 처리
+    /** 게시글 작성 처리
+     * 로그인한 유저만 가능
+     */
     @PostMapping("/write")
     public String write(PostVO post,
                        HttpSession session,
@@ -121,7 +124,7 @@ public class PostController {
         PostVO post = postService.getPostById(id);
         
         if (post == null || !post.getUserID().equals(loginUser.getUserID())) {
-            return "redirect:/post";
+            return "redirect:/post";  //본인 글만 수정 가능...
         }
         
         model.addAttribute("post", post);
@@ -175,6 +178,7 @@ public class PostController {
         
         PostVO post = postService.getPostById(id);
         
+        /* 본인 또는 관리자만 삭제 가능함 */
         if (post == null || (!post.getUserID().equals(loginUser.getUserID()) && !loginUser.getIsAdmin())) {
             redirectAttributes.addFlashAttribute("error", "잘못된 요청입니다.");
             return "redirect:/post";
@@ -204,7 +208,7 @@ public class PostController {
         return "post/my";
     }
     
-    // 댓글 작성
+    // 댓글 작성... 로그인 필수
     @PostMapping("/{postId}/comment")
     public String addComment(@PathVariable Long postId,
                            @RequestParam String content,
@@ -229,10 +233,10 @@ public class PostController {
             redirectAttributes.addFlashAttribute("error", "댓글 등록에 실패했습니다.");
         }
         
-        return "redirect:/post/" + postId + "#comments";
+        return "redirect:/post/" + postId + "#comments";  // #comments로 스크롤 이동
     }
     
-    // 댓글 삭제
+    /* 댓글 삭제 */
     @PostMapping("/comment/delete/{commentId}")
     public String deleteComment(@PathVariable Long commentId,
                               @RequestParam Long postId,

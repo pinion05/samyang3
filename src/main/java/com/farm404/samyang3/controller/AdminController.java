@@ -26,10 +26,10 @@ public class AdminController {
     @Autowired
     private PostService postService;
     
-    // 관리자 대시보드
+    /* 관리자 메인화면 보여주기 */
     @GetMapping
     public String dashboard(Model model) {
-        // 통계 정보
+        // 통계 정보 담아서
         model.addAttribute("userCount", userService.getUserCount());
         model.addAttribute("productCount", productService.getProductCount());
         model.addAttribute("orderCount", orderService.getOrderCount());
@@ -50,7 +50,10 @@ public class AdminController {
         return "admin/users";
     }
     
-    // 사용자 관리자 권한 토글
+    /**
+     * 관리자 권한 토글 기능
+     * 일반유저 <-> 관리자
+     */
     @PostMapping("/users/{userId}/toggle-admin")
     public String toggleAdmin(@PathVariable Integer userId,
                              RedirectAttributes redirectAttributes) {

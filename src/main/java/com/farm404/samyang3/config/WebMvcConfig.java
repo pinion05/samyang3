@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/* 웹MVC 설정... 이거 맞게 한건가 */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     
@@ -18,6 +19,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private AdminInterceptor adminInterceptor;
     
+    // 인터셉터 등록하는거
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 로그인 인터셉터
@@ -31,6 +33,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns(SessionUtil.ADMIN_PATHS);
     }
     
+    /**
+     * 정적 리소스 핸들러 추가
+     * css, js, 이미지 같은거 매핑해줌.. 이거 없으면 404뜸
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 정적 리소스 매핑

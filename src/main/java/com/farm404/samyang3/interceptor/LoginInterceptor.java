@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+/* 로그인 인터셉터 클래스 */
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
     
@@ -18,7 +19,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         
         // 로그인되어 있지 않은 경우
         if (loginUser == null) {
-            // 원래 요청 URL 저장 (로그인 후 리다이렉트용)
+            /* 원래 요청 URL 저장 (로그인 후 리다이렉트용).. 이거 잘 작동하나 */
             String originalUrl = request.getRequestURL().toString();
             String queryString = request.getQueryString();
             if (queryString != null) {
@@ -28,7 +29,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             
             // 로그인 페이지로 리다이렉트
             response.sendRedirect(request.getContextPath() + "/login");
-            return false;
+            return false;  //false면 요청 중단됨
         }
         
         return true;

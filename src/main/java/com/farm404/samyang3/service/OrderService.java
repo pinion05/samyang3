@@ -32,7 +32,9 @@ public class OrderService {
     @Autowired
     private CartService cartService;
     
-    // 주문 생성 (OrderVO와 장바구니 아이템 리스트로)
+    /**
+     * 주문 생성하는 메소드... 트랜잭션 걸어놨음
+     */
     @Transactional(rollbackFor = Exception.class)
     public Long createOrder(OrderVO order, List<CartVO> cartItems) {
         try {
@@ -47,12 +49,12 @@ public class OrderService {
             
             // 2. 주문 상품 생성
             for (CartVO cart : cartItems) {
-                // 재고 차감
+                // 재고 차감하고
                 if (productMapper.updateStock(cart.getProductID(), cart.getQuantity()) <= 0) {
                     throw new Exception("재고가 부족합니다: " + cart.getProductName());
                 }
                 
-                // 주문 상품 생성
+                /* 주문 상품 만들어서 저장 */
                 OrderItemVO orderItem = new OrderItemVO();
                 orderItem.setOrderID(order.getOrderID());
                 orderItem.setProductID(cart.getProductID());

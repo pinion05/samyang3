@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
+/* 유저 매퍼 인터페이스 */
 @Mapper
 public interface UserMapper {
     // 회원가입
@@ -13,7 +14,7 @@ public interface UserMapper {
     // 로그인 - username으로 조회
     UserVO selectByUsername(String username);
     
-    // 이메일 중복 체크
+    /* 이메일 중복체크할때 씀 */
     UserVO selectByEmail(String email);
     
     // ID로 사용자 조회
@@ -28,9 +29,12 @@ public interface UserMapper {
     // 전체 사용자 목록
     List<UserVO> selectAllUsers();
     
-    // 사용자 수
+    // 사용자 수 카운트하는거
     int countUsers();
     
-    // 관리자 권한 업데이트
+    /**
+     * 관리자 권한 업데이트
+     * @Param 쓰는거 맞나?
+     */
     int updateAdminStatus(@Param("userID") Integer userID, @Param("isAdmin") Boolean isAdmin);
 }

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+// 주문 관련 컨트롤러임
 @Controller
 @RequestMapping("/order")
 public class OrderController {
@@ -31,7 +32,7 @@ public class OrderController {
     @Autowired
     private OrderItemService orderItemService;
     
-    // 주문 페이지 (장바구니에서 이동)
+    /* 체크아웃 페이지... 결제하기전 */
     @GetMapping("/checkout")
     public String checkout(HttpSession session, Model model) {
         UserVO loginUser = (UserVO) session.getAttribute(SessionUtil.LOGIN_USER);
@@ -52,7 +53,7 @@ public class OrderController {
         
         // 주문 금액 계산
         int totalAmount = cartService.calculateTotalAmount(cartItems);
-        int shippingFee = totalAmount >= 30000 ? 0 : 3000;
+        int shippingFee = totalAmount >= 30000 ? 0 : 3000;  //3만원이상 무료배송
         int finalAmount = totalAmount + shippingFee;
         
         model.addAttribute("user", user);
@@ -64,7 +65,10 @@ public class OrderController {
         return "order/checkout";
     }
     
-    // 주문 처리
+    /**
+     * 실제 주문처리
+     * 재고확인하고 주문생성함
+     */
     @PostMapping("/place")
     public String placeOrder(@RequestParam String shippingAddress,
                            @RequestParam String paymentMethod,

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+// 댓글 매퍼
 @Mapper
 public interface CommentMapper {
     
@@ -18,9 +19,10 @@ public interface CommentMapper {
     // 댓글 단건 조회
     CommentVO selectById(@Param("commentId") Integer commentId);
     
-    // 댓글 작성
+    /* 댓글 작성 */
     int insertComment(CommentVO comment);
     
-    // 댓글 삭제
+    /** 댓글 삭제
+     * 수정은 없음... 삭제만 가능 */
     int deleteComment(@Param("commentId") Integer commentId);
 }

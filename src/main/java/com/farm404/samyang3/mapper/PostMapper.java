@@ -6,6 +6,9 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/** 게시판 매퍼
+ * 게시판 CRUD
+ */
 @Mapper
 public interface PostMapper {
     
@@ -18,7 +21,7 @@ public interface PostMapper {
     // 사용자별 게시글 목록
     List<PostVO> selectByUserId(@Param("userId") Integer userId);
     
-    // 게시글 검색
+    /* 게시글 검색... 제목이랑 내용에서 검색 */
     List<PostVO> searchPosts(@Param("keyword") String keyword);
     
     // 게시글 상세 조회
@@ -34,5 +37,5 @@ public interface PostMapper {
     int deletePost(@Param("postId") Integer postId);
     
     // 조회수 증가
-    int increaseViewCount(@Param("postId") Integer postId);
+    int increaseViewCount(@Param("postId") Integer postId);  //+1 해줌
 }

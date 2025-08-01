@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/** 리뷰 서비스
+ * 리뷰 관련 비즈니스 로직
+ */
 @Service
 public class ReviewService {
     
@@ -24,12 +27,12 @@ public class ReviewService {
         return reviewMapper.selectByUserId(userId);
     }
     
-    // 리뷰 작성
+    /* 리뷰 작성 */
     @Transactional
     public boolean addReview(ReviewVO review) {
         try {
             // 이미 동일 상품에 리뷰를 작성했는지 확인
-            // (실제로는 주문별로 체크해야 하지만 현재 구조상 제한)
+            // (실제로는 주문별로 체크해야 하지만 현재 구조상 제한)... 좀 애매함
             
             return reviewMapper.insert(review) > 0;
         } catch (Exception e) {
@@ -64,10 +67,12 @@ public class ReviewService {
         }
     }
     
-    // 평균 평점 계산
+    /** 평균 평점 계산
+     * null이면 0.0 반환함
+     */
     public double getAverageRating(Long productId) {
         Double avg = reviewMapper.selectAverageRating(productId);
-        return avg != null ? avg : 0.0;
+        return avg != null ? avg : 0.0;  // null체크.. 이거 맞나
     }
     
     // 리뷰 단건 조회

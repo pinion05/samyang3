@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/* 리뷰 매퍼 */
 @Mapper
 public interface ReviewMapper {
     
@@ -15,7 +16,7 @@ public interface ReviewMapper {
     // 사용자별 리뷰 목록
     List<ReviewVO> selectByUserId(@Param("userId") Long userId);
     
-    // 주문별 리뷰 조회 (중복 체크용)
+    // 주문별 리뷰 조회 (중복 체크용)... 근데 OrderID가 ReviewVO에 없음ㅋㅋ
     ReviewVO selectByOrderId(@Param("orderId") Long orderId);
     
     // 리뷰 단건 조회
@@ -30,6 +31,7 @@ public interface ReviewMapper {
     // 리뷰 삭제
     int delete(@Param("reviewId") Long reviewId);
     
-    // 평균 평점
+    /** 평균 평점
+     * AVG 함수 써서 구함 */
     Double selectAverageRating(@Param("productId") Long productId);
 }
