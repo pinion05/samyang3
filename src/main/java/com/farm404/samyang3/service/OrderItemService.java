@@ -34,6 +34,7 @@ public class OrderItemService {
         
         for (OrderItemVO item : items) {
             total += item.getPrice() * item.getQuantity();  // 단가 * 수량
+        }
         
         return total;
     }
