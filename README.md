@@ -593,6 +593,339 @@ sequenceDiagram
     end
 ```
 
+## 로그인 처리 흐름
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant B as 브라우저
+    participant UC as UserController
+    participant US as UserService
+    participant UM as UserMapper
+    participant D as Database
+    participant S as Session
+    
+    U->>B: 로그인 정보 입력
+    B->>UC: POST /login
+    UC->>US: login(username, password)
+    US->>UM: selectByUsername(username)
+    UM->>D: SELECT * FROM User WHERE username = ?
+    D-->>UM: UserVO
+    UM-->>US: UserVO
+    
+    alt 사용자 없음
+        US-->>UC: null
+        UC-->>B: 로그인 실패 메시지
+    else 비밀번호 불일치
+        US-->>UC: null
+        UC-->>B: 로그인 실패 메시지
+    else 로그인 성공
+        US-->>UC: UserVO
+        UC->>S: setAttribute("loginUser", UserVO)
+        UC->>CS: getCartCount(userId)
+        CS->>S: setAttribute("cartCount", count)
+        UC-->>B: 원래 요청 페이지로 리다이렉트
+        B-->>U: 로그인 완료
+    end
+```
+
+## 회원가입 처리 흐름
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant B as 브라우저
+    participant UC as UserController
+    participant US as UserService
+    participant UM as UserMapper
+    participant D as Database
+    
+    U->>B: 회원가입 폼 작성
+    B->>UC: POST /register
+    UC->>US: register(UserVO)
+    
+    US->>UM: selectByUsername(username)
+    UM->>D: SELECT * FROM User WHERE username = ?
+    D-->>UM: 결과
+    
+    alt 아이디 중복
+        UM-->>US: UserVO exists
+        US-->>UC: false
+        UC-->>B: 아이디 중복 에러
+    else 아이디 사용 가능
+        US->>UM: selectByEmail(email)
+        UM->>D: SELECT * FROM User WHERE email = ?
+        D-->>UM: 결과
+        
+        alt 이메일 중복
+            UM-->>US: UserVO exists
+            US-->>UC: false
+            UC-->>B: 이메일 중복 에러
+        else 이메일 사용 가능
+            US->>UM: insertUser(UserVO)
+            UM->>D: INSERT INTO User VALUES (...)
+            D-->>UM: 1 (성공)
+            UM-->>US: 1
+            US-->>UC: true
+            UC-->>B: 회원가입 성공, 로그인 페이지로
+            B-->>U: 회원가입 완료
+        end
+    end
+```
+
+## 장바구니 추가 처리 흐름
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant B as 브라우저
+    participant CC as CartController
+    participant CS as CartService
+    participant CM as CartMapper
+    participant D as Database
+    participant S as Session
+    
+    U->>B: 장바구니 추가 버튼 클릭
+    B->>CC: POST /cart/add
+    CC->>S: getLoginUser()
+    
+    alt 비로그인
+        S-->>CC: null
+        CC-->>B: 로그인 페이지로 리다이렉트
+    else 로그인 상태
+        S-->>CC: UserVO
+        CC->>CS: addToCart(CartVO)
+        CS->>CM: selectByUserAndProduct(userId, productId)
+        CM->>D: SELECT * FROM Cart WHERE userID = ? AND productID = ?
+        D-->>CM: 결과
+        
+        alt 기존 상품 있음
+            CM-->>CS: ExistingCartVO
+            CS->>CM: updateQuantity(cartId, newQuantity)
+            CM->>D: UPDATE Cart SET quantity = ? WHERE cartID = ?
+            D-->>CM: 1 (성공)
+        else 새로운 상품
+            CS->>CM: insertCart(CartVO)
+            CM->>D: INSERT INTO Cart VALUES (...)
+            D-->>CM: 1 (성공)
+        end
+        
+        CM-->>CS: 성공
+        CS-->>CC: true
+        CC->>S: updateCartCount()
+        CC-->>B: 장바구니 추가 성공 메시지
+        B-->>U: 장바구니 업데이트 완료
+    end
+```
+
+## 상품 리뷰 작성 흐름
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant B as 브라우저
+    participant RC as ReviewController
+    participant RS as ReviewService
+    participant RM as ReviewMapper
+    participant PS as ProductService
+    participant D as Database
+    
+    U->>B: 리뷰 작성 폼 제출
+    B->>RC: POST /review/write
+    RC->>RS: addReview(ReviewVO)
+    
+    Note over RS: 구매 이력 확인 로직 필요
+    
+    RS->>RM: insert(ReviewVO)
+    RM->>D: INSERT INTO Review VALUES (...)
+    D-->>RM: 1 (성공)
+    RM-->>RS: 성공
+    
+    RS->>PS: updateAverageRating(productId)
+    PS->>RM: selectAverageRating(productId)
+    RM->>D: SELECT AVG(rating) FROM Review WHERE productID = ?
+    D-->>RM: 평균 평점
+    RM-->>PS: 4.5
+    
+    PS->>D: UPDATE Product SET averageRating = ?
+    D-->>PS: 성공
+    
+    RS-->>RC: true
+    RC-->>B: 리뷰 작성 성공
+    B-->>U: 리뷰 등록 완료
+```
+
+## 게시글 작성 및 댓글 처리 흐름
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant B as 브라우저
+    participant PC as PostController
+    participant PS as PostService
+    participant CS as CommentService
+    participant PM as PostMapper
+    participant CM as CommentMapper
+    participant D as Database
+    participant S as Session
+    
+    Note over U,B: 게시글 작성
+    U->>B: 게시글 작성 폼 제출
+    B->>PC: POST /post/write
+    PC->>S: getLoginUser()
+    S-->>PC: UserVO
+    PC->>PS: createPost(PostVO)
+    PS->>PM: insertPost(PostVO)
+    PM->>D: INSERT INTO Post VALUES (...)
+    D-->>PM: PostID
+    PM-->>PS: PostID
+    PS-->>PC: true
+    PC-->>B: redirect:/post/{postId}
+    
+    Note over U,B: 게시글 조회
+    B->>PC: GET /post/{postId}
+    PC->>PS: getPostById(postId)
+    PS->>PM: selectById(postId)
+    PM->>D: SELECT * FROM Post WHERE postID = ?
+    D-->>PM: PostVO
+    PS->>PM: increaseViewCount(postId)
+    PM->>D: UPDATE Post SET viewCount = viewCount + 1
+    PC->>CS: getCommentsByPost(postId)
+    CS->>CM: selectByPostId(postId)
+    CM->>D: SELECT * FROM Comment WHERE postID = ?
+    D-->>CM: List<CommentVO>
+    CM-->>CS: List<CommentVO>
+    CS-->>PC: List<CommentVO>
+    PC-->>B: 게시글 상세 페이지
+    
+    Note over U,B: 댓글 작성
+    U->>B: 댓글 작성
+    B->>PC: POST /post/{postId}/comment
+    PC->>S: getLoginUser()
+    S-->>PC: UserVO
+    PC->>CS: addComment(CommentVO)
+    CS->>CM: insertComment(CommentVO)
+    CM->>D: INSERT INTO Comment VALUES (...)
+    D-->>CM: 1 (성공)
+    CM-->>CS: 성공
+    CS-->>PC: true
+    PC-->>B: redirect:/post/{postId}#comments
+    B-->>U: 댓글 등록 완료
+```
+
+## 관리자 대시보드 조회 흐름
+
+```mermaid
+sequenceDiagram
+    participant A as 관리자
+    participant B as 브라우저
+    participant AC as AdminController
+    participant AI as AdminInterceptor
+    participant US as UserService
+    participant PS as ProductService
+    participant OS as OrderService
+    participant D as Database
+    
+    A->>B: /admin/dashboard 접근
+    B->>AC: GET /admin/dashboard
+    AC->>AI: preHandle()
+    AI->>Session: getUser()
+    Session-->>AI: User(isAdmin=true)
+    AI->>AC: 요청 진행 허용
+    
+    AC->>US: getUserCount()
+    US->>D: SELECT COUNT(*) FROM User
+    D-->>US: 150
+    
+    AC->>PS: getProductCount()
+    PS->>D: SELECT COUNT(*) FROM Product
+    D-->>PS: 50
+    
+    AC->>OS: getOrderCount()
+    OS->>D: SELECT COUNT(*) FROM Orders
+    D-->>OS: 320
+    
+    AC->>OS: getPendingOrders()
+    OS->>D: SELECT * FROM Orders WHERE status = 'PENDING'
+    D-->>OS: List<OrderVO>
+    
+    AC->>OS: getRecentOrders(10)
+    OS->>D: SELECT * FROM Orders ORDER BY createdAt DESC LIMIT 10
+    D-->>OS: List<OrderVO>
+    
+    AC-->>B: 대시보드 페이지 렌더링
+    B-->>A: 통계 및 주문 정보 표시
+```
+
+## 상품 검색 처리 흐름
+
+```mermaid
+sequenceDiagram
+    participant U as 사용자
+    participant B as 브라우저
+    participant PC as ProductController
+    participant PS as ProductService
+    participant PM as ProductMapper
+    participant D as Database
+    
+    U->>B: 검색어 입력 및 검색
+    B->>PC: GET /product/search?keyword=토마토
+    PC->>PS: searchProducts("토마토")
+    PS->>PM: searchByKeyword("토마토")
+    PM->>D: SELECT * FROM Product WHERE productName LIKE '%토마토%' OR description LIKE '%토마토%'
+    D-->>PM: List<ProductVO>
+    PM-->>PS: List<ProductVO>
+    
+    PS->>PM: selectCategories()
+    PM->>D: SELECT DISTINCT category FROM Product
+    D-->>PM: List<String>
+    PM-->>PS: List<String>
+    
+    PS-->>PC: SearchResult
+    PC-->>B: 검색 결과 페이지
+    B-->>U: 검색된 상품 목록 표시
+```
+
+## 주문 상태 변경 흐름 (관리자)
+
+```mermaid
+sequenceDiagram
+    participant A as 관리자
+    participant B as 브라우저
+    participant AC as AdminController
+    participant OS as OrderService
+    participant OM as OrderMapper
+    participant D as Database
+    
+    A->>B: 주문 상태 변경 요청
+    B->>AC: POST /admin/order/updateStatus
+    AC->>OS: updateOrderStatus(orderId, newStatus)
+    
+    OS->>OM: selectById(orderId)
+    OM->>D: SELECT * FROM Orders WHERE orderID = ?
+    D-->>OM: OrderVO
+    
+    alt 취소 불가능 상태
+        OM-->>OS: Order(status="SHIPPED")
+        OS-->>AC: false (이미 배송 시작)
+        AC-->>B: 상태 변경 불가 메시지
+    else 변경 가능
+        OS->>OM: updateStatus(orderId, newStatus)
+        OM->>D: UPDATE Orders SET status = ? WHERE orderID = ?
+        D-->>OM: 1 (성공)
+        
+        alt 주문 취소인 경우
+            OS->>PS: restoreStock(orderItems)
+            PS->>D: UPDATE Product SET stock = stock + ? WHERE productID = ?
+        end
+        
+        OM-->>OS: 성공
+        OS-->>AC: true
+        AC-->>B: 상태 변경 성공
+        B-->>A: 업데이트된 주문 정보 표시
+    end
+```
+
 ### 비즈니스 프로세스 플로우차트
 
 ## 회원가입 프로세스
